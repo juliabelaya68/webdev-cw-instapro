@@ -1,3 +1,7 @@
+import { renderHeaderComponent } from "./header-component.js";
+import {renderUploadImageComponent} from './upload-image-component.js'
+import { registerUser, loginUser } from "../api.js";
+
 /**
  * Компонент страницы авторизации.
  * Этот компонент предоставляет пользователю интерфейс для входа в систему или регистрации.
@@ -149,9 +153,10 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           .then((user) => {
             setUser(user.user);
           })
-          .catch((error) => {
+          .catch(async (err) => {
+            const {error} = await err
             console.warn(error);
-            setError(error.message);
+            setError(error);
           });
       }
     });

@@ -31,6 +31,6 @@ export function renderLoadingPageComponent({ appEl, user, goToPage }) {
   renderHeaderComponent({
     user,
     element: document.querySelector(".header-container"),
-    goToPage,
+    
   });
 }

@@ -1,3 +1,9 @@
+import {
+  ADD_POSTS_PAGE,
+  AUTH_PAGE,
+  POSTS_PAGE,
+} from "../routes.js";
+import { goToPage, logout } from '../index.js'
 /**
  * Компонент заголовка страницы.
  * Этот компонент отображает шапку страницы с логотипом, кнопкой добавления постов/входа и кнопкой выхода (если пользователь авторизован).
@@ -5,14 +11,14 @@
  * @param {HTMLElement} params.element - HTML-элемент, в который будет рендериться заголовок.
  * @returns {HTMLElement} Возвращает элемент заголовка после рендеринга.
  */
-   export function renderHeaderComponent({ user, element, goToPage }) {
+   export function renderHeaderComponent({ user, element}) {
   /**
    * Рендерит содержимое заголовка.
    */
   element.innerHTML = `
   <div class="page-header">
       <h1 class="logo">instapro</h1>
-      <button class="header-button add-or-login-button">
+      ${goToPage ? `<button class="header-button add-or-login-button">
       ${
         user
           ? `<div title="Добавить пост" class="add-post-sign"></div>`
@@ -23,7 +29,8 @@
         user
           ? `<button title="${user.name}" class="header-button logout-button">Выйти</button>`
           : ""
-      }  
+      }
+        ` : ""}    
   </div>
   `;
 
@@ -34,7 +41,7 @@
    */
   element
     .querySelector(".add-or-login-button")
-    .addEventListener("click", () => {
+    ?.addEventListener("click", () => {
       if (user) {
         goToPage(ADD_POSTS_PAGE);
       } else {
