@@ -23,6 +23,27 @@ export function getPosts({ token }) {
     });
 }
 
+export const getUserPosts = ({ token, userId }) => {
+  const link = `${postsHost}/user-posts/${userId}`
+
+  return fetch(link, {
+    method: "GET",
+    headers: {
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((data) => {
+      return data.posts;
+    });
+}
+
 export function registerUser({ login, password, name, imageUrl }) {
   return fetch(baseHost + "/api/user", {
     method: "POST",
@@ -66,4 +87,27 @@ export function uploadImage({ file }) {
   }).then((response) => {
     return response.json();
   });
+}
+export const addPost = ({token, description, imageUrl}) => {
+  const post = {
+    description, imageUrl
+  }
+
+  return fetch(postsHost, {
+    method: "POST",
+    headers: {
+      Authorization: token,
+    },
+    body: JSON.stringify(post)
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error("Нет авторизации");
+      }
+
+      return response.json();
+    })
+    .then((data) => {
+      return data.post;
+    });
 }

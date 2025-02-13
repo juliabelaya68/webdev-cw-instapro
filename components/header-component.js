@@ -18,7 +18,7 @@ import { goToPage, logout } from '../index.js'
   element.innerHTML = `
   <div class="page-header">
       <h1 class="logo">instapro</h1>
-      ${goToPage ? `<button class="header-button add-or-login-button">
+      <button class="header-button add-or-login-button">
       ${
         user
           ? `<div title="Добавить пост" class="add-post-sign"></div>`
@@ -29,8 +29,7 @@ import { goToPage, logout } from '../index.js'
         user
           ? `<button title="${user.name}" class="header-button logout-button">Выйти</button>`
           : ""
-      }
-        ` : ""}    
+      }  
   </div>
   `;
 

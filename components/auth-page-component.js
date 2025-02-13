@@ -154,7 +154,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
             setUser(user.user);
           })
           .catch(async (err) => {
-            const {error} = await err
+            const {error} = await err;
             console.warn(error);
             setError(error);
           });
