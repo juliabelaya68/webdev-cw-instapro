@@ -5,7 +5,7 @@
  * @param {HTMLElement} params.element - HTML-элемент, в который будет рендериться заголовок.
  * @returns {HTMLElement} Возвращает элемент заголовка после рендеринга.
  */
-export function renderHeaderComponent({ element }) {
+   export function renderHeaderComponent({ user, element, goToPage }) {
   /**
    * Рендерит содержимое заголовка.
    */
