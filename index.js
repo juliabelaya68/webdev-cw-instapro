@@ -67,8 +67,8 @@ export const goToPage = (newPage, data) => {
     }
 
     if (newPage === USER_POSTS_PAGE) {
-      // @@TODO: реализовать получение постов юзера из API
-     // console.log("Открываю страницу пользователя: ", data.userId);
+      page = LOADING_PAGE;
+      renderApp();
      return getUserPosts({token: getToken(), userId: data.userId}).then(
       (newPosts) => {
         page = USER_POSTS_PAGE;
@@ -128,7 +128,8 @@ const renderApp = () => {
   if (page === POSTS_PAGE || page === USER_POSTS_PAGE) {
     return renderPostsPageComponent({
       appEl,
-      user
+      user,
+      token: getToken()
     });
   }
 

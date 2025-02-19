@@ -1,0 +1,24 @@
+{
+  "name": "instapro",
+  "version": "1.0.0",
+  "description": "MVP социальной сети для обмена фотографиями",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/webml/instapro.git"
+  },
+  "keywords": [],
+  "author": "Misha Lubarets",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/webml/instapro/issues"
+  },
+  "homepage": "https://github.com/webml/instapro#readme",
+  "dependencies": {
+    "date-fns": "^4.1.0"
+  }
+}

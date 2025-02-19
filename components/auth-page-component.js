@@ -102,7 +102,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
 
       if (isLoginMode) {
         // Обработка входа
-        const login = document.getElementById("login-input").value;
+        let login = document.getElementById("login-input").value;
         const password = document.getElementById("password-input").value;
 
         if (!login) {
@@ -114,6 +114,9 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           alert("Введите пароль");
           return;
         }
+
+        login = login.replaceAll('<', '&lt;')
+        login = login.replaceAll('>', '&gt;')
 
         loginUser({ login, password })
           .then((user) => {
