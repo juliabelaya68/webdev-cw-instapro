@@ -1,11 +1,24 @@
 import { renderHeaderComponent } from "./header-component.js";
-import {renderUploadImageComponent} from './upload-image-component.js'
+import { renderUploadImageComponent } from "./upload-image-component.js";
 import { registerUser, loginUser } from "../api.js";
+
+/**
+ * Функция для экранирования HTML-символов.
+ * @param {string} unsafe - Небезопасная строка.
+ * @returns {string} - Безопасная строка с экранированными символами.
+ */
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "<")
+    .replace(/>/g, ">")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
 
 /**
  * Компонент страницы авторизации.
  * Этот компонент предоставляет пользователю интерфейс для входа в систему или регистрации.
- * Форма переключается между режимами "Вход" и "Регистрация".
  *
  * @param {HTMLElement} params.appEl - Корневой элемент приложения, в который будет рендериться страница.
  * @param {Function} params.setUser - Функция, вызываемая при успешной авторизации или регистрации.
@@ -69,7 +82,6 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           </div>
       </div>    
     `;
-
     appEl.innerHTML = appHtml;
 
     /**
@@ -77,7 +89,9 @@ export function renderAuthPageComponent({ appEl, setUser }) {
      * @param {string} message - Текст сообщения об ошибке.
      */
     const setError = (message) => {
-      appEl.querySelector(".form-error").textContent = message;
+      // Экранируем сообщение перед выводом
+      const escapedMessage = escapeHtml(message);
+      appEl.querySelector(".form-error").textContent = escapedMessage;
     };
 
     // Рендерим заголовок страницы
@@ -98,33 +112,30 @@ export function renderAuthPageComponent({ appEl, setUser }) {
 
     // Обработка клика на кнопку входа/регистрации
     document.getElementById("login-button").addEventListener("click", () => {
-      setError("");
+      setError(""); // Очищаем предыдущие ошибки
 
       if (isLoginMode) {
         // Обработка входа
-        let login = document.getElementById("login-input").value;
+        const login = document.getElementById("login-input").value;
         const password = document.getElementById("password-input").value;
 
         if (!login) {
           alert("Введите логин");
           return;
         }
-
         if (!password) {
           alert("Введите пароль");
           return;
         }
 
-        login = login.replaceAll('<', '&lt;')
-        login = login.replaceAll('>', '&gt;')
-
+        // Отправляем данные без модификации
         loginUser({ login, password })
           .then((user) => {
             setUser(user.user);
           })
           .catch((error) => {
             console.warn(error);
-            setError(error.message);
+            setError(error.message); // Устанавливаем ошибку с экранированием
           });
       } else {
         // Обработка регистрации
@@ -136,30 +147,28 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           alert("Введите имя");
           return;
         }
-
         if (!login) {
           alert("Введите логин");
           return;
         }
-
         if (!password) {
           alert("Введите пароль");
           return;
         }
-
         if (!imageUrl) {
           alert("Не выбрана фотография");
           return;
         }
 
+        // Отправляем данные без модификации
         registerUser({ login, password, name, imageUrl })
           .then((user) => {
             setUser(user.user);
           })
           .catch(async (err) => {
-            const {error} = await err;
+            const { error } = await err;
             console.warn(error);
-            setError(error);
+            setError(error); // Устанавливаем ошибку с экранированием
           });
       }
     });

@@ -198,37 +198,53 @@
 }
 
 .delete-button {
-  width: 30px; /* Фиксированная ширина */
-  height: 30px; /* Фиксированная высота (равная ширине для круга) */
-  border-radius: 50%; /* Круглая форма */
-  background-color: transparent; /* Прозрачный фон */
-  border: 3px solid #000000; /* Светло-серый контур */
-  color: #000000; /* Темно-серый цвет для минуса */
-  font-size: 2em; /* Размер минуса */
-  line-height: center; /* Центрируем минус по вертикали */
-  text-align: 30px; /* Центрируем минус по горизонтали */
+  width: 30px; 
+  height: 30px; 
+  border-radius: 50%; 
+  background-color: transparent; 
+  border: 3px solid black; 
+  color: black; 
+  font-size: 45px; 
+  line-height: 0;
+  text-align: center;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  font-family: sans-serif; /* Более современный шрифт */
+  transition: all 0.2s ease-in-out; 
+  font-family: sans-serif;
   font-weight: bold;
-  margin-left: 296px;
-
-  /* Убираем стандартный текст кнопки */
-  text-indent: -9999px;
-  overflow: hidden;
   position: relative;
+  margin-top: 10px;
+  margin-left: 602px;
+  padding-bottom: 5px;
+  padding-left: 4px;
 }
 
-/* Добавляем псевдоэлемент для отображения минуса */
-.delete-button::before {
-  content: "–"; /* Символ минуса */
-  display: block;
-  text-indent: 0; /* Возвращаем текст на место */
+.delete-button::after {
+  content:"❌ Удалить пост"; 
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 30px;
+  padding-left: 50px;
+  color:#6c757d;;
+  padding: 12px 12px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease-in-out;
+  border: 1px solid #ccc;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-weight:lighter;
 }
+
+
+.delete-button:hover::after {
+  opacity: 1;
+}
+
+
+
+
+
 
 
 
