@@ -3,5 +3,5 @@ module.exports = {
     output: {
        filename: "main.js" // Выходной файл, который подключаем к HTML
        // Сохранится он по пути "./dist/main.js"
-    }
+    },
  }
