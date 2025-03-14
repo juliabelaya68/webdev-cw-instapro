@@ -1,7 +1,7 @@
 import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
-import { changeFavorite, deletePost } from "../api.js"; // Импортируем необходимые функции
+import { changeFavorite, deletePost } from "../api.js";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale";
 
@@ -15,15 +15,10 @@ const formatDate = (dateString) => {
 function escapeHtml(unsafe) {
   return unsafe
     .replace(/&/g, "&amp;")
-    .replace(/</g, "<")
-    .replace(/>/g, ">")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
-}
-
-// Функция для удаления HTML-тегов
-function stripTags(unsafe) {
-  return unsafe.replace(/<[^>]*>/g, ""); // Удаляем все теги
 }
 
 // Функция для форматирования списка лайков
@@ -40,7 +35,7 @@ function getFormattedLikes(likes) {
   )}</strong> и ещё <strong>${likes.length - 2}</strong>`;
 }
 
-// Шаблон поста
+// Шаблон поста,генерирует HTML-разметку для отображения одного поста
 const postComponent = ({
   imageUrl,
   user,
@@ -49,9 +44,9 @@ const postComponent = ({
   description,
   createdAt,
   isLiked,
-  currentUserId, // ID текущего пользователя
+  currentUserId,
 }) => `
-  <li class="post" data-post-id="${id}">
+  <div class="post" data-post-id="${id}">
     <div class="post-header" data-user-id="${user.id}">
       <img src="${user.imageUrl}" class="post-header__user-image">
       <p class="post-header__user-name">${escapeHtml(user.name)}</p>
@@ -75,17 +70,17 @@ const postComponent = ({
     </div>
     <p class="post-text">
       <span class="user-name">${escapeHtml(user.name)}</span>
-      ${escapeHtml(stripTags(description))} <!-- Очищаем описание от тегов -->
+      ${escapeHtml(description)}
     </p>
     <p class="post-date">
       ${formatDate(createdAt)}
     </p>
     ${
-      currentUserId === user.id // Если текущий пользователь является владельцем поста
-        ? `<button class="delete-button">-</button>` // Отображаем кнопку удаления под постом
+      currentUserId === user.id
+        ? `<button class="delete-button">-</button>`
         : ""
     }
-  </li>
+  </div>
 `;
 
 // Обработка лайка
@@ -155,9 +150,7 @@ function createErrorMessage(container, message) {
 const handleDeletePost = async ({ postId, token, posts, container }) => {
   try {
     await deletePost({ token, postId });
-    // Удаляем пост из массива
     posts = posts.filter((post) => post.id !== postId);
-    // Находим элемент поста и заменяем его на сообщение "Пост удален"
     const postElement = container.querySelector(`[data-post-id="${postId}"]`);
     if (postElement) {
       postElement.innerHTML = `<p class="tooltip">Пост удален</p>`;
@@ -183,9 +176,9 @@ export function renderPostsPageComponent({ appEl, user, token }) {
   postsList.className = "posts";
 
   posts.forEach((post) => {
-    const postElement = document.createElement("li");
-    postElement.classList.add("post");
-    postElement.setAttribute("data-post-id", post.id);
+    const postElement = document.createElement("li");//Создание элемента списка (li)
+    postElement.classList.add("post-item"); // Добавляем класс для элемента списка
+    postElement.setAttribute("data-post-id", post.id);//Установка атрибута data-post-id:
 
     // Передаем currentUserId для проверки прав доступа
     postElement.innerHTML = postComponent({ ...post, currentUserId: user?._id }, user);

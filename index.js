@@ -69,16 +69,16 @@ export const goToPage = (newPage, data) => {
     if (newPage === USER_POSTS_PAGE) {
       page = LOADING_PAGE;
       renderApp();
-     return getUserPosts({token: getToken(), userId: data.userId}).then(
-      (newPosts) => {
-        page = USER_POSTS_PAGE;
-        posts = newPosts;
-        renderApp();
-      }
-    ).catch((error) => {
-      console.error(error);
-      goToPage(POSTS_PAGE);
-    });
+      return getUserPosts({ token: getToken(), userId: data.userId })
+        .then((newPosts) => {
+          page = USER_POSTS_PAGE;
+          posts = newPosts;
+          renderApp();
+        })
+        .catch((error) => {
+          console.error(error);
+          goToPage(POSTS_PAGE);
+        });
     }
 
     page = newPage;
@@ -117,11 +117,24 @@ const renderApp = () => {
     return renderAddPostPageComponent({
       appEl,
       onAddPostClick({ description, imageUrl }) {
-        console.log("Добавляю пост...", );
+        console.log("Добавляю пост...", { description, imageUrl });
+
+        // Добавляем пост и обновляем список постов
         addPost({ token: getToken(), description, imageUrl })
-        goToPage(POSTS_PAGE);
+          .then(() => {
+            // После успешного добавления поста обновляем список постов
+            return getPosts({ token: getToken() });
+          })
+          .then((newPosts) => {
+            posts = newPosts; // Обновляем глобальный список постов
+            goToPage(POSTS_PAGE); // Переходим на страницу постов
+          })
+          .catch((error) => {
+            console.error("Ошибка при добавлении поста:", error);
+            alert("Не удалось добавить пост. Попробуйте еще раз.");
+          });
       },
-      user
+      user,
     });
   }
 
@@ -129,10 +142,9 @@ const renderApp = () => {
     return renderPostsPageComponent({
       appEl,
       user,
-      token: getToken()
+      token: getToken(),
     });
   }
-
 };
 
 goToPage(POSTS_PAGE);

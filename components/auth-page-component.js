@@ -10,10 +10,19 @@ import { registerUser, loginUser } from "../api.js";
 function escapeHtml(unsafe) {
   return unsafe
     .replace(/&/g, "&amp;")
-    .replace(/</g, "<")
-    .replace(/>/g, ">")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+/**
+ * Функция для удаления HTML-тегов из строки.
+ * @param {string} unsafe - Строка, которая может содержать HTML-теги.
+ * @returns {string} - Строка без HTML-тегов.
+ */
+function stripTags(unsafe) {
+  return unsafe.replace(/<[^>]*>/g, ""); // Удаляем все HTML-теги
 }
 
 /**
@@ -25,23 +34,11 @@ function escapeHtml(unsafe) {
  *                                    Принимает объект пользователя в качестве аргумента.
  */
 export function renderAuthPageComponent({ appEl, setUser }) {
-  /**
-   * Флаг, указывающий текущий режим формы.
-   * Если `true`, форма находится в режиме входа. Если `false`, в режиме регистрации.
-   * @type {boolean}
-   */
-  let isLoginMode = true;
-
-  /**
-   * URL изображения, загруженного пользователем при регистрации.
-   * Используется только в режиме регистрации.
-   * @type {string}
-   */
-  let imageUrl = "";
+  let isLoginMode = true; // Режим формы: вход или регистрация
+  let imageUrl = ""; // URL загруженного изображения
 
   /**
    * Рендерит форму авторизации или регистрации.
-   * В зависимости от значения `isLoginMode` отображает соответствующий интерфейс.
    */
   const renderForm = () => {
     const appHtml = `
@@ -89,8 +86,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
      * @param {string} message - Текст сообщения об ошибке.
      */
     const setError = (message) => {
-      // Экранируем сообщение перед выводом
-      const escapedMessage = escapeHtml(message);
+      const escapedMessage = escapeHtml(message); // Экранируем сообщение
       appEl.querySelector(".form-error").textContent = escapedMessage;
     };
 
@@ -128,7 +124,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           return;
         }
 
-        // Отправляем данные без модификации
+        // Отправляем данные на сервер
         loginUser({ login, password })
           .then((user) => {
             setUser(user.user);
@@ -139,9 +135,9 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           });
       } else {
         // Обработка регистрации
-        const login = document.getElementById("login-input").value;
-        const name = document.getElementById("name-input").value;
-        const password = document.getElementById("password-input").value;
+        const login = stripTags(document.getElementById("login-input").value); // Удаляем теги
+        const name = stripTags(document.getElementById("name-input").value); // Удаляем теги
+        const password = stripTags(document.getElementById("password-input").value); // Удаляем теги
 
         if (!name) {
           alert("Введите имя");
@@ -160,7 +156,7 @@ export function renderAuthPageComponent({ appEl, setUser }) {
           return;
         }
 
-        // Отправляем данные без модификации
+        // Отправляем данные на сервер
         registerUser({ login, password, name, imageUrl })
           .then((user) => {
             setUser(user.user);
